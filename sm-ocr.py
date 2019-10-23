@@ -22,16 +22,6 @@ def read_video(filename, delta=1, max=200):
     if t >= max:
       break
 
-# TODO:
-# - put this into a class
-# - use multiprocessing Queue?
-# - automatically compute region for item text
-# - why is tesseract slow?
-# - pass crop region on command line
-# - also OCR ammo counts
-# - use PSM 7 (single line)
-# - use OEM 1 (OCR engine mode neural nets only)
-# - use PIL ImageStat to decide whether to OCR
 def process(frame, api, **kwargs):
   image = frame.to_image()
   api.SetImage(image)
