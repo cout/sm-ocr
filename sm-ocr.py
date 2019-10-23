@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from tesserocr import PyTessBaseAPI, PSM
+from tesserocr import PyTessBaseAPI, PSM, OEM
 
 import av
 import av.filter
@@ -34,7 +34,7 @@ def read_video(filename, delta=1, max=200):
 # - use PIL ImageStat to decide whether to OCR
 def process(frame, **kwargs):
   image = frame.to_image()
-  with PyTessBaseAPI(psm=PSM.SINGLE_LINE) as api:
+  with PyTessBaseAPI(psm=PSM.SINGLE_LINE, oem=OEM.LSTM_ONLY) as api:
     api.SetImage(image)
     api.SetRectangle(320+184, 360, 568, 72)
     item_text = api.GetUTF8Text().strip()
