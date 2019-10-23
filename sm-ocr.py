@@ -32,12 +32,11 @@ def read_video(filename, delta=1, max=200):
 # - use PSM 7 (single line)
 # - use OEM 1 (OCR engine mode neural nets only)
 # - use PIL ImageStat to decide whether to OCR
-def process(frame, **kwargs):
+def process(frame, api, **kwargs):
   image = frame.to_image()
-  with PyTessBaseAPI(psm=PSM.SINGLE_LINE, oem=OEM.LSTM_ONLY) as api:
-    api.SetImage(image)
-    api.SetRectangle(320+184, 360, 568, 72)
-    item_text = api.GetUTF8Text().strip()
+  api.SetImage(image)
+  api.SetRectangle(320+184, 360, 568, 72)
+  item_text = api.GetUTF8Text().strip()
   return { 'time': frame.time, 'item': item_text }
 
 if __name__ == '__main__':
@@ -45,7 +44,8 @@ if __name__ == '__main__':
   parser.add_argument('filename', type=str)
   args = parser.parse_args()
 
-  for frame in read_video(args.filename):
-    # print(frame.time, frame.time_base, frame)
-    data = process(frame)
-    print(json.dumps(data))
+  with PyTessBaseAPI(psm=PSM.SINGLE_LINE, oem=OEM.LSTM_ONLY) as api:
+    for frame in read_video(args.filename):
+      # print(frame.time, frame.time_base, frame)
+      data = process(frame, api)
+      print(json.dumps(data))
